@@ -1,9 +1,9 @@
 package com.swacorp.crew.microservices.css.api;
 
-import com.swacorp.crew.microservices.css.domain.ChangeLog;
+import com.swacorp.crew.microservices.css.domain.QualDates;
 import com.swacorp.crew.microservices.css.exception.BadRequestException;
 import com.swacorp.crew.microservices.css.exception.NotFoundException;
-import com.swacorp.crew.microservices.css.service.ChangeLogService;
+import com.swacorp.crew.microservices.css.service.QualDatesService;
 import java.util.List;
 import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,22 +19,22 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * Created by POD Norris on 5/9/16.
  */
 @RestController
-@RequestMapping("/changelog")
-public class ChangeLogApi {
+@RequestMapping("/qualification")
+public class QualDatesApi {
 
     @Autowired
-    ChangeLogService service;
+    QualDatesService service;
 
     /**
      *
      * @return @throws com.swacorp.crew.microservices.css.exception.NotFoundException
      */
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/qualdates", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<ChangeLog> getChangeLogs() throws NotFoundException {
-        List<ChangeLog> chageLogs = service.findAll();
-        if (!chageLogs.isEmpty()) {
-            return chageLogs;
+    public List<QualDates> getQualDates() throws NotFoundException {
+        List<QualDates> qualDates = service.findAll();
+        if (!qualDates.isEmpty()) {
+            return qualDates;
         } else {
             throw new NotFoundException();
         }
@@ -47,19 +47,19 @@ public class ChangeLogApi {
      * @throws com.swacorp.crew.microservices.css.exception.BadRequestException
      * @throws com.swacorp.crew.microservices.css.exception.NotFoundException
      */
-    @RequestMapping(value = "/{changeLogId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/qualdates/{qualDatesId}", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public ChangeLog getChangeLog(@PathVariable Long changeLogId) throws BadRequestException, NotFoundException {
-        ChangeLog chageLog = null;
+    public QualDates getQualDate(@PathVariable Integer qualDatesId) throws BadRequestException, NotFoundException {
+    	QualDates qualDate = null;
 
         try {
-            chageLog = service.findById(changeLogId);
+            qualDate = service.findById(qualDatesId);
         } catch (NumberFormatException e) {
             throw new BadRequestException();
         }
 
-        if (chageLog != null) {
-            return chageLog;
+        if (qualDate != null) {
+            return qualDate;
         } else {
             throw new NotFoundException();
         }
@@ -67,38 +67,38 @@ public class ChangeLogApi {
 
     /**
      *
-     * @param inputchangeLog
+     * @param inputQualDate
      * @return
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/qualdates",method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
-    public ChangeLog save(@RequestBody ChangeLog inputchangeLog) {
+    public QualDates save(@RequestBody QualDates inputQualDate) {
 
-        ChangeLog createdChageLog = null;
-        createdChageLog = service.create(inputchangeLog);
-        return createdChageLog;
+    	QualDates createdQualDate = null;
+        createdQualDate = service.create(inputQualDate);
+        return createdQualDate;
 
     }
 
     /**
      *
-     * @param changeLogId
+     * @param qualDateId
      * @throws com.swacorp.crew.microservices.css.exception.NotFoundException
      * @throws com.swacorp.crew.microservices.css.exception.BadRequestException
      */
-    @RequestMapping(value = "/{changeLogId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/qualdates/{qualDateId}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void delete(@PathVariable Long changeLogId) throws NotFoundException, BadRequestException {
+    public void delete(@PathVariable Integer qualDateId) throws NotFoundException, BadRequestException {
 
-        ChangeLog changeLog = null;
+        QualDates qualDate = null;
         try {
-            changeLog = service.findById(changeLogId);
+            qualDate = service.findById(qualDateId);
         } catch (NumberFormatException e) {
             throw new BadRequestException();
         } 
         
-        if (changeLog != null) {
-            service.delete(changeLog);
+        if (qualDate != null) {
+            service.delete(qualDate);
         } else {
             throw new NotFoundException();
         }
@@ -106,29 +106,29 @@ public class ChangeLogApi {
 
     /**
      *
-     * @param changeLogId
-     * @param inChangeLog
+     * @param qualDateId
+     * @param inQualDate
      * @return
      * @throws com.swacorp.crew.microservices.css.exception.NotFoundException
      * @throws com.swacorp.crew.microservices.css.exception.BadRequestException
      */
-    @RequestMapping(value = "/{changeLogId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/qualdates/{qualDateId}", method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.OK)
-    public ChangeLog update(@PathVariable Long changeLogId, @RequestBody ChangeLog inChangeLog) throws NotFoundException, BadRequestException {
+    public QualDates update(@PathVariable Integer qualDateId, @RequestBody QualDates inQualDate) throws NotFoundException, BadRequestException {
 
-        ChangeLog changeLog = null;
+    	QualDates qualDate = null;
         try {
-            changeLog = service.findById(changeLogId);
+            qualDate = service.findById(qualDateId);
         } catch (NumberFormatException e) {
             throw new NotFoundException();
         } 
 
-        if (changeLog != null && Objects.equals(changeLog.getChangeLogID(), inChangeLog.getChangeLogID())) {
-            changeLog = service.update(inChangeLog);
+        if (qualDate != null && Objects.equals(qualDate.getQualDateId(), inQualDate.getQualDateId())) {
+            qualDate = service.update(inQualDate);
         } else {
             throw new BadRequestException();
         }
-        return changeLog;
+        return qualDate;
     }
 
 }

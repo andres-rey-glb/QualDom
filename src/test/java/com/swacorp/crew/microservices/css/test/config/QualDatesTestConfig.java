@@ -1,7 +1,7 @@
 package com.swacorp.crew.microservices.css.test.config;
 
 import com.gemstone.gemfire.cache.GemFireCache;
-import com.swacorp.crew.microservices.css.domain.ChangeLog;
+import com.swacorp.crew.microservices.css.domain.QualDates;
 import java.io.IOException;
 import java.util.Properties;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +19,7 @@ import org.springframework.data.gemfire.repository.config.EnableGemfireRepositor
 //gemfire source package
 @EnableGemfireRepositories(basePackages = "com.swacorp.crew.microservices.css.repository")
 @ComponentScan(basePackages = {"com.swacorp.crew.microservices.css.service","com.swacorp.crew.microservices.css.api"})
-public class ChangeLogTestConfig {
+public class QualDatesTestConfig {
     
     /**
      * 
@@ -53,17 +53,17 @@ public class ChangeLogTestConfig {
      * @return 
      */
     @Bean
-    LocalRegionFactoryBean<Long, ChangeLog> changeLogRegion(final GemFireCache cache) {
-        LocalRegionFactoryBean<Long, ChangeLog> region = new LocalRegionFactoryBean<>();
+    LocalRegionFactoryBean<Integer, QualDates> QualDatesRegion(final GemFireCache cache) {
+        LocalRegionFactoryBean<Integer, QualDates> region = new LocalRegionFactoryBean<>();
         region.setCache(cache);
         region.setClose(false);
-        region.setName("ChangeLog");
+        region.setName("QualDates");
         region.setPersistent(false);
         return region;
     }
 
     public static void main(String[] args) throws IOException {
-        SpringApplication application = new SpringApplication(ChangeLogTestConfig.class);
+        SpringApplication application = new SpringApplication(QualDatesTestConfig.class);
         application.setWebEnvironment(true);
         application.run(args);
     }

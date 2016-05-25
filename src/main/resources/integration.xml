@@ -12,7 +12,7 @@
     </gfe:pool>
 
 
-    <gfe:client-region id="ChangeLog" name="ChangeLog" cache-ref="client-cache" pool-name="client-pool" shortcut="PROXY">
+    <gfe:client-region id="QualDates" name="QualDates" cache-ref="client-cache" pool-name="client-pool" shortcut="PROXY">
 
     </gfe:client-region>
 

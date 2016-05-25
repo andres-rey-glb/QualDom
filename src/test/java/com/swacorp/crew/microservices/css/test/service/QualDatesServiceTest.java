@@ -17,17 +17,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swacorp.crew.microservices.css.test.config.ChangeLogTestConfig;
+import com.swacorp.crew.microservices.css.test.config.QualDatesTestConfig;
 
 /**
  * Created by POD Norris on 5/11/16.
  */
 //Spring JunitConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = ChangeLogTestConfig.class)
+@SpringApplicationConfiguration(classes = QualDatesTestConfig.class)
 //Allows to get an ramdom aviable port
 @WebIntegrationTest({"server.port: 0"})
-public class ChangeLogServiceTest {
+public class QualDatesServiceTest {
 
     /**
      * A random available port is injected into the port field just for testing
@@ -36,7 +36,9 @@ public class ChangeLogServiceTest {
     @Value("${local.server.port}")
     private int port;
     //test ID value
-    private final String LOG_ID = "123456";
+    private final String QUALDATE_ID = "123456";
+    private final String CM_ID = "4587";
+    private final String QUAL_ID = "3452";
 
     //Required to Generate JSON content from Java objects
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -45,17 +47,20 @@ public class ChangeLogServiceTest {
      * Create an entity ChangeLog into a region
      * @throws Exception 
      */
-    @Test
-    public void createChangeLogEntryTest() throws Exception {
+    @SuppressWarnings("rawtypes")
+	@Test
+    public void createQualDateEntryTest() throws Exception {
 
         //Test RestTemplate to invoke the API.
         RestTemplate restTemplate = new TestRestTemplate();
         String SERVER_URL = "http://localhost:" + port;
-        String API = "/api/changelog";
+        String API = "/api/qualification/qualdates";
 
         //Building the Request body data
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("changeLogID", LOG_ID);
+        requestBody.put("qualDateId", QUALDATE_ID);
+        requestBody.put("crewMemberId", CM_ID);
+        requestBody.put("qualificationId", QUAL_ID);
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
 
@@ -75,16 +80,17 @@ public class ChangeLogServiceTest {
      * Get a ChangeLog entry from local region by ID
      * @throws Exception 
      */
-    @Test
-    public void getChangeLogByIdTest() throws Exception {
-        createChangeLogEntryTest();
+    @SuppressWarnings("rawtypes")
+	@Test
+    public void getQualDateByIdTest() throws Exception {
+    	createQualDateEntryTest();
         //Test RestTemplate to invoke the API.
         RestTemplate restTemplate = new TestRestTemplate();
         String SERVER_URL = "http://localhost:" + port;
-        String API = "/api/changelog/";
+        String API = "/api/qualification/qualdates/";
         //Invoking the API
         ResponseEntity<Map> apiResponse
-                = restTemplate.getForEntity(SERVER_URL + API + LOG_ID, Map.class);
+                = restTemplate.getForEntity(SERVER_URL + API + QUALDATE_ID, Map.class);
 
         assertEquals(HttpStatus.OK, apiResponse.getStatusCode());
         assertNotNull(apiResponse.getBody());
@@ -95,17 +101,18 @@ public class ChangeLogServiceTest {
      * a BadRequest response.
      * @throws Exception 
      */
-    @Test
+    @SuppressWarnings("rawtypes")
+	@Test
     public void getChangeLogByIdBadRequesTest() throws Exception {
         
         //Test RestTemplate to invoke the API.
         RestTemplate restTemplate = new TestRestTemplate();
         String SERVER_URL = "http://localhost:" + port;
-        String API = "/api/changelog";
-        String badChangeLogID = "/badrequest";
+        String API = "/api/qualification/qualdates";
+        String badQualDateID = "/badrequest";
         //Invoking the API
         ResponseEntity<Map> apiResponse
-                = restTemplate.getForEntity(SERVER_URL + API + badChangeLogID, Map.class);
+                = restTemplate.getForEntity(SERVER_URL + API + badQualDateID, Map.class);
 
         assertEquals(HttpStatus.BAD_REQUEST, apiResponse.getStatusCode());
         assertNotNull(apiResponse.getBody());
@@ -115,23 +122,24 @@ public class ChangeLogServiceTest {
      * test the update for an entry changeLog based on given ID
      * @throws Exception 
      */
-    @Test
+    @SuppressWarnings("rawtypes")
+	@Test
     public void getChangeLogUpdateTest() throws Exception {
-        createChangeLogEntryTest();
+        createQualDateEntryTest();
         //Test RestTemplate to invoke the API.
         RestTemplate restTemplate = new TestRestTemplate();
         String SERVER_URL = "http://localhost:" + port;
-        String API = "/api/changelog/";
+        String API = "/api/qualification/qualdates/";
 
         Map<String, String> map = new HashMap<String, String>();
-        map.put("changeLogID", LOG_ID);
+        map.put("qualDateId", QUALDATE_ID);
         //update values
-        map.put("changeLogUserID", "x217376");
-        restTemplate.put(SERVER_URL + API + LOG_ID, null, map);
+        map.put("comment", "x217376");
+        restTemplate.put(SERVER_URL + API + QUALDATE_ID, null, map);
 
         //Invoking the API
         ResponseEntity<Map> apiResponse
-                = restTemplate.getForEntity(SERVER_URL + API + LOG_ID, Map.class);
+                = restTemplate.getForEntity(SERVER_URL + API + QUALDATE_ID, Map.class);
 
         assertEquals(HttpStatus.OK, apiResponse.getStatusCode());
         assertNotNull(apiResponse.getBody());
@@ -141,29 +149,30 @@ public class ChangeLogServiceTest {
      * Test delete operation for an changeLog entity
      * @throws Exception 
      */
-    @Test
-    public void getChangeLogDeleteTest() throws Exception {
-        createChangeLogEntryTest();
+    @SuppressWarnings("rawtypes")
+	@Test
+    public void getQualDateDeleteTest() throws Exception {
+        createQualDateEntryTest();
         //Test RestTemplate to invoke the API.
         RestTemplate restTemplate = new TestRestTemplate();        
         String SERVER_URL = "http://localhost:" + port;
-        String API = "/api/changelog";
-        String changeLogId = "/"+LOG_ID;
+        String API = "/api/qualification/qualdates";
+        String qualDateId = "/"+QUALDATE_ID;
         
         Map<String, String> map = new HashMap<>();
-        map.put("changeLogID", LOG_ID);
+        map.put("changeLogID", QUALDATE_ID);
         
         //Invoking the API        
         ResponseEntity<Map> apiResponse
-                = restTemplate.getForEntity(SERVER_URL + API + changeLogId, Map.class);
+                = restTemplate.getForEntity(SERVER_URL + API + qualDateId, Map.class);
 
         assertEquals(HttpStatus.OK, apiResponse.getStatusCode());
         assertNotNull(apiResponse.getBody());
         
         //delete
-        restTemplate.delete(SERVER_URL + API + changeLogId,map);
+        restTemplate.delete(SERVER_URL + API + qualDateId,map);
         
-        apiResponse = restTemplate.getForEntity(SERVER_URL + API + changeLogId, Map.class);        
+        apiResponse = restTemplate.getForEntity(SERVER_URL + API + qualDateId, Map.class);        
         assertEquals(HttpStatus.NOT_FOUND, apiResponse.getStatusCode());
         
     }   

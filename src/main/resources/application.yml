@@ -1,0 +1,8 @@
+server:
+    port: 8093
+    contextPath: /api
+    
+spring:
+  application:
+    name: changelog 
+ 
